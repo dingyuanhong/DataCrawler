@@ -1,0 +1,1 @@
+del /a /f /q .\pholcus_pkg\history\*
