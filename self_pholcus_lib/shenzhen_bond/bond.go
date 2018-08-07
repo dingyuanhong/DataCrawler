@@ -76,6 +76,42 @@ func GetDayString(t time.Time) string{
 	return fmt.Sprintf("%04d-%02d-%02d",t.Year(),int(t.Month()),t.Day());
 }
 
+var DATA string= "./data/深圳证券/";
+var CREATE_DATE=map[string]int{"year":1990,"month":12,"day":1};
+var LIMIT_DATE=map[string]int{"year":2018,"month":8,"day":4};
+
+//创建交易所日期
+func GreaterCreateDay(t time.Time)bool{
+	if(t.Year() < CREATE_DATE["year"]){
+		return false;
+	}else if(t.Year() == CREATE_DATE["year"]){
+		if(int(t.Month()) < CREATE_DATE["month"]){
+			return false;
+		}
+	}
+	return true;
+}
+
+func LimitDay(t time.Time) bool{
+	limit := LIMIT_DATE;
+	if(t.Year() < limit["year"]){
+		return false;
+	}else if(t.Year() == limit["year"]){
+		if(int(t.Month()) < limit["month"]){
+			return false;
+		}
+	}
+	return true;
+}
+
+//日期是否有效
+func ValidDay(t time.Time)bool{
+	if(LimitDay(t) == false){
+		return false;
+	}
+	return GreaterCreateDay(t);
+}
+
 //历史数据拉取
 var history_ShenZhengBond = map[string]bool{
     "市场总貌-证券类别统计":true,
@@ -128,10 +164,6 @@ var rss_ShenZhengBond = map[string]string{
 	"行情-历史数据":"http://www.szse.cn/api/market/ssjjhq/getHistoryData?marketId=1",
 }
 
-var DATA string= "./data/";
-var CREATE_DATE=map[string]int{"year":1990,"month":12,"day":1};
-var LIMIT_DATE=map[string]int{"year":2018,"month":8,"day":4};
-
 //指标排名
 var select_index = map[string]string{
 	"全部":"GE%2C30%2C00%2C20",
@@ -146,38 +178,6 @@ var module_index = map[string]string{
 	"流通市值":"LTSZ",
 	"市盈利":"SYL",
 };
-
-//创建交易所日期
-func GreaterCreateDay(t time.Time)bool{
-	if(t.Year() < CREATE_DATE["year"]){
-		return false;
-	}else if(t.Year() == CREATE_DATE["year"]){
-		if(int(t.Month()) < CREATE_DATE["month"]){
-			return false;
-		}
-	}
-	return true;
-}
-
-func LimitDay(t time.Time) bool{
-	limit := LIMIT_DATE;
-	if(t.Year() < limit["year"]){
-		return false;
-	}else if(t.Year() == limit["year"]){
-		if(int(t.Month()) < limit["month"]){
-			return false;
-		}
-	}
-	return true;
-}
-
-//日期是否有效
-func ValidDay(t time.Time)bool{
-	if(LimitDay(t) == false){
-		return false;
-	}
-	return GreaterCreateDay(t);
-}
 
 //单页查询
 var PageNORule = &Rule{
