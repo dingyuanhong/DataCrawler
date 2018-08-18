@@ -1,4 +1,4 @@
-package pholcus_lib
+package self_pholcus_lib
 
 import (
 	_ "./shenzhen_bond"
